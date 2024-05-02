@@ -32,7 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-.mvn
 package-lock.json
 
 
