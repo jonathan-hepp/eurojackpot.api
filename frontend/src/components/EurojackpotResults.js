@@ -2,21 +2,20 @@ import { useEffect, useState } from 'react';
 import moment from "moment";
 import './EurojackpotResults.css';
 
+const apiUrl = process.env.REACT_APP_API_BASE_URL;
+const emptyFormData = { number: "", startDate: "", finishDate: "", winningNumber: "", includeSup: false }
+
 export const EurojackpotResults = () => {
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState([]);
-    const [formData, setFormData] = useState({
-        number: "",
-        startDate: "",
-        finishDate: "",
-        winningNumber: "",
-        includeSup: false,
-    });
+    const [formData, setFormData] = useState(emptyFormData);
 
     useEffect(() => {
-        setLoading(true);
-        fetchResults();
-    }, []);
+        if (formData === emptyFormData) {
+                setLoading(true);
+                fetchResults();
+        }
+    }, [formData]);
 
     const fetchResults = () => {
         setLoading(true);
@@ -24,7 +23,7 @@ export const EurojackpotResults = () => {
         const fmtStartDate = startDate ? moment(startDate).format("DD.MM.yyyy") : "";
         const fmtFinishDate = finishDate ? moment(finishDate).format("DD.MM.yyyy") : "";
 
-        fetch(`api/results?resultNumber=${number}&startDate=${fmtStartDate}&finishDate=${fmtFinishDate}&winningNumber=${winningNumber}&includeSupplementaryNumbers=${includeSup}`)
+        fetch(`${apiUrl}/api/results?resultNumber=${number}&startDate=${fmtStartDate}&finishDate=${fmtFinishDate}&winningNumber=${winningNumber}&includeSupplementaryNumbers=${includeSup}`)
             .then(response => response.json())
             .then(data => {
                 setResults(data);
@@ -52,16 +51,14 @@ export const EurojackpotResults = () => {
         fetchResults();
     }
 
-    const handleReset = () => {
-        setFormData({
-            number: "",
-            startDate: "",
-            finishDate: "",
-            winningNumber: "",
-            includeSup: false,
-        });
-        fetchResults();
+    const handleReset = (event) => {
+        event.preventDefault();
+        setFormData(emptyFormData);
     }
+
+    if (loading) {
+        return <p>Loading...</p>;
+      }
 
     return (
         <div className="App">
@@ -103,7 +100,7 @@ export const EurojackpotResults = () => {
                             </div>
                         </form>
     </div>
-    <div>{results.length == 0 ? <p><strong> No items match the criteria </strong></p> : <p><strong> Showing {results.length} item(s) </strong></p> }</div>
+    <div>{results.length === 0 ? <p><strong> No items match the criteria </strong></p> : <p><strong> Showing {results.length} item(s) </strong></p> }</div>
             <table className="table table-dark table-striped table-bordered">
                 <thead>
                     <tr>

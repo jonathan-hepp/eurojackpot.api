@@ -43,9 +43,4 @@ public class LotteryResult {
 
     @CsvBindByPosition(position = 8)
     private Integer draw7;
-
-    @Override
-    public String toString() {
-        return STR."LotteryDraw [number=\{number}, date=\{date.toString()}, 1=\{draw1}, 2=\{draw2}, 3=\{draw3}, 4=\{draw4}, 5=\{draw5}, 6=\{draw6}, 7=\{draw7}]";
-    }
 }
