@@ -6,7 +6,7 @@ const apiUrl = process.env.REACT_APP_API_BASE_URL;
 const emptyFormData = { number: "", startDate: "", finishDate: "", winningNumber: "", includeSup: false }
 
 /*
-  This is the main component responsible for loeading the data from the backend, rendering and providing the options for filtering.
+ * This is the main component responsible for loading the data from the backend, rendering and providing the options for filtering.
 */
 export const EurojackpotResults = () => {
     const [loading, setLoading] = useState(false);
