@@ -7,7 +7,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+/**
+ * Class responsible for processing the results obtained from the data layer based on the parameters received from the consumer.
+ */
 @Service
 public class LotteryService {
 
@@ -23,32 +28,25 @@ public class LotteryService {
      */
     public List<LotteryResult> findLotteryResults(Integer number, LocalDate start, LocalDate finish, Integer winningNumber, boolean includeSupplementaryNumbers) {
         return lotteryResultDao.getAllResults().stream()
-                .filter(r -> byDate(r, start, finish))
-                .filter(r -> byWinningNumber(r, winningNumber, includeSupplementaryNumbers))
-                .filter(r -> byNumber(r, number)).toList();
-    }
-
-    /*
-     * Filter lottery results by number. Explicit filter pass if null.
-     */
-    private boolean byNumber(LotteryResult result, Integer number) {
-        if (number == null) return true;
-        return number.equals(result.getNumber());
+                .filter(result -> number == null || number.equals(result.getNumber()))
+                .filter(result -> isWithinDateRange(result.getDate(), start, finish))
+                .filter(result -> winningNumber == null || isWinningNumber(result, winningNumber, includeSupplementaryNumbers))
+                .collect(Collectors.toList());
     }
 
     /*
      * Filter lottery results by date, allowing open-ended search.
      */
-    private boolean byDate(LotteryResult result, LocalDate start, LocalDate finish) {
-        var startDate = start != null ? start : LocalDate.MIN;
-        var finishDate = finish != null ? finish : LocalDate.MAX;
-        return !result.getDate().isBefore(startDate) && !result.getDate().isAfter(finishDate);
+    private boolean isWithinDateRange(LocalDate date, LocalDate start, LocalDate finish) {
+        LocalDate startDate = Optional.ofNullable(start).orElse(LocalDate.MIN);
+        LocalDate finishDate = Optional.ofNullable(finish).orElse(LocalDate.MAX);
+        return !date.isBefore(startDate) && !date.isAfter(finishDate);
     }
 
     /*
      * Filter lottery results by draw winning numbers. Explicit filter pass if null.
      */
-    private boolean byWinningNumber(LotteryResult result, Integer winningNumber, boolean includeSupplementaryNumbers) {
+    private boolean isWinningNumber(LotteryResult result, Integer winningNumber, boolean includeSupplementaryNumbers) {
         if (winningNumber == null) return true;
         return result.getDraw1().equals(winningNumber)
                 || result.getDraw2().equals(winningNumber)

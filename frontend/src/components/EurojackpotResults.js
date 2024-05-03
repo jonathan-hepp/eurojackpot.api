@@ -5,11 +5,16 @@ import './EurojackpotResults.css';
 const apiUrl = process.env.REACT_APP_API_BASE_URL;
 const emptyFormData = { number: "", startDate: "", finishDate: "", winningNumber: "", includeSup: false }
 
+/*
+  This is the main component responsible for loeading the data from the backend, rendering and providing the options for filtering.
+*/
 export const EurojackpotResults = () => {
     const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const [results, setResults] = useState([]);
     const [formData, setFormData] = useState(emptyFormData);
 
+    // loads data from the API on first load and on search reset
     useEffect(() => {
         if (formData === emptyFormData) {
                 setLoading(true);
@@ -17,6 +22,7 @@ export const EurojackpotResults = () => {
         }
     }, [formData]);
 
+    // constructs the request based on the search form data and updates the results
     const fetchResults = () => {
         setLoading(true);
         const { number, startDate, finishDate, winningNumber, includeSup } = formData;
@@ -32,9 +38,11 @@ export const EurojackpotResults = () => {
             .catch(error => {
                 console.error('Error fetching results:', error);
                 setLoading(false);
+                setErrorMessage('Error obtaining results. Make sure the backend is running!');
             });
     }
 
+    // update the form data on every component change
     const handleFormChange = (event) => {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -100,9 +108,12 @@ export const EurojackpotResults = () => {
                             </div>
                         </form>
     </div>
-    <div>{results.length === 0 ? <p><strong> No items match the criteria </strong></p> : <p><strong> Showing {results.length} item(s) </strong></p> }</div>
+         {/* Conditional expression to display different messages based on error condition or results data */}
+    <div>{ errorMessage ? <h4 className="error-message"> { errorMessage } </h4>
+            : results.length === 0 ? <p><strong> No items match the criteria </strong></p>
+            : <p><strong> Showing {results.length} item(s) </strong></p>  }</div>
             <table className="table table-dark table-striped table-bordered">
-                <thead>
+                <thead className="sticky-top">
                     <tr>
                         <th>Result number</th>
                         <th>Date</th>

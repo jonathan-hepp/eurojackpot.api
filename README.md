@@ -26,7 +26,9 @@ In order to run it locally, execute the following command on the project root di
 
 ### `mvn spring-boot:run`
 
-The backend is available by default at [http://localhost:8080](http://localhost:8080).
+The backend is available by default at [http://localhost:8080](http://localhost:8080).\
+It includes Swagger UI
+at [http://localhost:8080/api/swagger-ui/index.html](http://localhost:8080/api/swagger-ui/index.html)
 
 To run the unit tests, execute the following command:
 
