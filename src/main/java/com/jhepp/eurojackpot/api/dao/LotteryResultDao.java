@@ -73,7 +73,7 @@ public class LotteryResultDao {
             logger.error("CSV file not found: {}", FILE_NAME);
             throw new RuntimeException("Failed to load lottery results from CSV file", e);
         } catch (Exception e) {
-            logger.error("Error reading CSV file: {}", FILE_NAME, e);
+            logger.error("Error reading CSV file: {} - {}", FILE_NAME, e.getMessage());
             throw new RuntimeException("Failed to load lottery results from CSV file", e);
         }
     }

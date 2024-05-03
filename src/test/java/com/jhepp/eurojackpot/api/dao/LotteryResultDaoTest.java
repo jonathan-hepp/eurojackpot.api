@@ -3,8 +3,8 @@ package com.jhepp.eurojackpot.api.dao;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,17 +20,12 @@ class LotteryResultDaoTest {
 
     @Test
     public void testGetAllResults() throws IOException {
-        var csvData = File.createTempFile("csvsample", ".tmp");
-        var writer = new FileWriter(csvData);
-        writer.write(csvSample);
-        writer.close();
+        var csvData = createTempCsvFile(csvSample);
 
         var lotteryResultDao = new LotteryResultDao(csvData);
-
         var results = lotteryResultDao.getAllResults();
 
         assertEquals(4, results.size());
-        // verify it is sorted correctly
         assertEquals(735, results.getFirst().getNumber());
         assertEquals(734, results.get(1).getNumber());
         assertEquals(733, results.get(2).getNumber());
@@ -38,23 +33,24 @@ class LotteryResultDaoTest {
     }
 
     @Test
-    public void testGetAllResults_Error() {
+    public void testGetAllResults_WrongData() throws IOException {
+        var csvData = createTempCsvFile("malformed data");
+
+        var lotteryResultDao = new LotteryResultDao(csvData);
+
+        assertTrue(lotteryResultDao.getAllResults().isEmpty());
+    }
+
+    @Test
+    public void testGetAllResults_InvalidFile() {
         var exception = assertThrows(RuntimeException.class, () -> new LotteryResultDao(null));
 
         assertTrue(exception.getMessage().contains("Failed to load lottery results from CSV file"));
     }
 
-    @Test
-    public void testGetAllResults_WrongData() throws IOException {
-        var csvData = File.createTempFile("csvfail", ".tmp");
-        var writer = new FileWriter(csvData);
-        writer.write("malformed data");
-        writer.close();
-
-        var lotteryResultDao = new LotteryResultDao(csvData);
-
-        var results = lotteryResultDao.getAllResults();
-
-        assertTrue(results.isEmpty());
+    private File createTempCsvFile(String content) throws IOException {
+        var csvData = File.createTempFile("csvsample", ".tmp");
+        Files.writeString(csvData.toPath(), content);
+        return csvData;
     }
 }
