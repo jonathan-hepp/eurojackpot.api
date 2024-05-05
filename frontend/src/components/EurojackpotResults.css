@@ -38,6 +38,15 @@
   }
 }
 
+.title-box {
+    display: inline-flex;
+}
+
+.title-box > img {
+    margin-right: 5px;
+    padding-bottom: 5px;
+}
+
 .error-message {
     color: red;
 }

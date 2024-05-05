@@ -32,6 +32,11 @@ public class LotteryResultController {
         this.lotteryService = lotteryService;
     }
 
+    /**
+     * Returns a collection of {@link LotteryResult} based on the parameters provided, or the full list if no params.
+     * If validation fails, returns BAD_REQUEST.
+     * This method is available in Swagger UI <a href="http://localhost:8080/api/swagger-ui/index.html#/lottery-result-controller/getLotteryResults">here</a>
+     */
     @GetMapping
     public ResponseEntity<List<LotteryResult>> getLotteryResults(@Parameter(description = "Search by lottery result number", example = "123")
                                                                  @RequestParam(required = false) Integer resultNumber,
@@ -44,7 +49,8 @@ public class LotteryResultController {
                                                                  @Parameter(description = "Defines whether to include the supplementary numbers into the winning number search", example = "true")
                                                                  @RequestParam(required = false) boolean includeSupplementaryNumbers) {
         if (isNotValid(resultNumber, startDate, finishDate, winningNumber, includeSupplementaryNumbers)) {
-            logger.info("Validation failed for input: resultNumber={}, startDate={}, finishDate={}, winningNumber={}, includeSupplementaryNumbers={}", resultNumber, startDate, finishDate, winningNumber, includeSupplementaryNumbers);
+            logger.info("Validation failed for input: resultNumber={}, startDate={}, finishDate={}, winningNumber={}, includeSupplementaryNumbers={}",
+                    resultNumber, startDate, finishDate, winningNumber, includeSupplementaryNumbers);
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(lotteryService.findLotteryResults(resultNumber, startDate, finishDate, winningNumber, includeSupplementaryNumbers));
@@ -53,11 +59,11 @@ public class LotteryResultController {
     /**
      * The stated validation rules are:
      *
-     * @param resultNumber  - has to be greater than 0
-     * @param startDate     - has to be before finishDate
-     * @param finishDate    - has to be after startDate
-     * @param winningNumber - has to be between 1 and 50
-     * @param includeSup    - has to be true only if winningNumber is also valid
+     * @param resultNumber  - must be greater than 0
+     * @param startDate     - must not be after finishDate
+     * @param finishDate    - must not be before startDate
+     * @param winningNumber - must be between 1 and 50
+     * @param includeSup    - must be true only if winningNumber is also valid
      * @return true if invalid, false otherwise
      */
     private boolean isNotValid(Integer resultNumber, LocalDate startDate, LocalDate finishDate, Integer winningNumber, boolean includeSup) {

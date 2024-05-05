@@ -10,6 +10,11 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
+/**
+ * Model that represents a single lottery result record, each field mapped to its position in the source CSV file.
+ * Since it does not contain db context and is read-only, this class can be serialized directly to the frontend
+ * without an intermediary DTO.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

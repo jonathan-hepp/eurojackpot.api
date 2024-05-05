@@ -70,7 +70,7 @@ export const EurojackpotResults = () => {
 
     return (
         <div className="App">
-            <h2>Eurojackpot Results</h2>
+            <span className="title-box"><img src="logo.png" width="60" height="50"></img><h2>Eurojackpot Results</h2></span>
             <div className="container p-3">
             <h5>Filter results:</h5>
                         <form className="row align-items-center" onSubmit={handleSearch}>

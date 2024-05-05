@@ -44,10 +44,9 @@ public class LotteryService {
     }
 
     /*
-     * Filter lottery results by draw winning numbers. Explicit filter pass if null.
+     * Filter lottery results by draw winning numbers. If includeSupplementaryNumbers is true, the last 2 draw numbers are also included.
      */
     private boolean isWinningNumber(LotteryResult result, Integer winningNumber, boolean includeSupplementaryNumbers) {
-        if (winningNumber == null) return true;
         return result.getDraw1().equals(winningNumber)
                 || result.getDraw2().equals(winningNumber)
                 || result.getDraw3().equals(winningNumber)

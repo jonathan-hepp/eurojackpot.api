@@ -1,12 +1,13 @@
 # Eurojackpot Results API
 
-This is an exercise project, consisting of a backend API developed using Java Spring Boot \
-and a front-end application in React JS.
+This is an exercise project, consisting of a backend API developed using Java Spring Boot and a front-end application in
+React JS.
+It loads data from a CSV file and provides it as a searchable API.
 
-## Quick start
+# Quick start
 
-You can get the full application up and running using docker. Simply run the following \
-command in the root directory of the project:
+The simplest way to get the full application up and running is using docker. \
+Simply run the following command in the root directory of the project:
 
 ### `docker-compose up --build -d`
 

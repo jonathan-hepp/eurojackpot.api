@@ -58,7 +58,7 @@ public class LotteryResultDao {
     /**
      * Using OpenCSV to read the source data from the provided file, mapping it to a {@link LotteryResult} collection.
      *
-     * @param file - a csv file to extract the data from
+     * @param file - a CSV file to extract the data from
      * @return a collection of results if parsing succeeds, an exception otherwise.
      */
     private List<LotteryResult> loadResultsFromSource(File file) {
